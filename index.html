@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine?</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffe6e6; /* Light pink background */
+            font-family: 'Arial', sans-serif;
+            overflow: hidden; /* Prevents scrollbars when button moves */
+        }
+
+        h1 {
+            color: #ff4d4d;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .container {
+            position: relative;
+            text-align: center;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        #yesBtn {
+            background-color: #ff4d4d;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        #yesBtn:hover {
+            background-color: #e60000;
+            transform: scale(1.1);
+        }
+
+        #noBtn {
+            background-color: white;
+            color: #ff4d4d;
+            border: 2px solid #ff4d4d;
+            position: absolute; /* Allows it to move freely */
+        }
+        
+        /* Image styling if you want to add a cute gif later */
+        .gif-container {
+            margin-bottom: 20px;
+        }
+        
+        img {
+            width: 200px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="gif-container">
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmZlZmRjM2YyMmYyMmYyMmYyMmYyMmYyMmYyMmYyMmYyMmYyMmYyMmYySZ/LpDmM2wSt6Hm5f7jG5/giphy.gif" alt="Cute Bear">
+    </div>
+
+    <h1 id="question">Will you be my Valentine?</h1>
+
+    <div class="container">
+        <button id="yesBtn">Yes! 💖</button>
+        <button id="noBtn">No</button>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const question = document.getElementById('question');
+
+        // Logic for the "No" button moving away
+        noBtn.addEventListener('mouseover', () => {
+            const i = Math.floor(Math.random() * (window.innerWidth - noBtn.offsetWidth));
+            const j = Math.floor(Math.random() * (window.innerHeight - noBtn.offsetHeight));
+            
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = i + 'px';
+            noBtn.style.top = j + 'px';
+        });
+
+        // Logic for clicking "Yes"
+        yesBtn.addEventListener('click', () => {
+            question.innerHTML = "Yay! I knew you'd say yes! 🥰";
+            
+            // Hide the buttons after clicking yes
+            yesBtn.style.display = 'none';
+            noBtn.style.display = 'none';
+            
+            // Optional: Change background color or add confetti here
+            document.body.style.backgroundColor = "#ffcccc";
+        });
+    </script>
+</body>
+</html>
