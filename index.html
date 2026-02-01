@@ -12,21 +12,22 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-color: #ffe6e6; /* Light pink background */
+            background-color: #ffe6e6;
             font-family: 'Arial', sans-serif;
-            overflow: hidden; /* Prevents scrollbars when button moves */
+            overflow: hidden; /* Important: stops scrollbars from appearing */
         }
 
         h1 {
             color: #ff4d4d;
-            font-size: 3rem;
+            font-size: 2.5rem;
             margin-bottom: 20px;
             text-align: center;
+            z-index: 10; /* Keeps text above hearts */
         }
 
-        .container {
+        .buttons {
             position: relative;
-            text-align: center;
+            z-index: 10;
         }
 
         button {
@@ -35,8 +36,9 @@
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.2s ease;
             margin: 10px;
+            outline: none;
         }
 
         #yesBtn {
@@ -54,29 +56,44 @@
             background-color: white;
             color: #ff4d4d;
             border: 2px solid #ff4d4d;
-            position: absolute; /* Allows it to move freely */
         }
-        
-        /* Image styling if you want to add a cute gif later */
-        .gif-container {
-            margin-bottom: 20px;
-        }
-        
+
         img {
-            width: 200px;
-            border-radius: 10px;
+            width: 180px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            z-index: 10;
+        }
+
+        /* Floating Hearts Animation Styling */
+        .heart {
+            position: fixed;
+            color: #ff4d4d;
+            font-size: 24px;
+            animation: floatUp 4s linear forwards;
+            opacity: 0;
+            z-index: 1; /* Behind the text */
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1.5);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="gif-container">
-        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmZlZmRjM2YyMmYyMmYyMmYyMmYyMmYyMmYyMmYyMmYyMmYyMmYyMmYySZ/LpDmM2wSt6Hm5f7jG5/giphy.gif" alt="Cute Bear">
-    </div>
+    <img src="https://media.tenor.com/fMNb3g2c1dAAAAAi/mocha-bear-hearts.gif" alt="Cute Bear">
 
     <h1 id="question">Will you be my Valentine?</h1>
 
-    <div class="container">
+    <div class="buttons">
         <button id="yesBtn">Yes! 💖</button>
         <button id="noBtn">No</button>
     </div>
@@ -86,27 +103,60 @@
         const noBtn = document.getElementById('noBtn');
         const question = document.getElementById('question');
 
-        // Logic for the "No" button moving away
-        noBtn.addEventListener('mouseover', () => {
-            const i = Math.floor(Math.random() * (window.innerWidth - noBtn.offsetWidth));
-            const j = Math.floor(Math.random() * (window.innerHeight - noBtn.offsetHeight));
-            
-            noBtn.style.position = 'absolute';
-            noBtn.style.left = i + 'px';
-            noBtn.style.top = j + 'px';
-        });
+        // Logic to make the No button run away
+        noBtn.addEventListener('mouseover', moveButton);
+        noBtn.addEventListener('touchstart', moveButton); // For mobile phones
 
-        // Logic for clicking "Yes"
+        function moveButton() {
+            // Calculate random position within the window
+            // window.innerWidth gives the width of the visible screen
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+
+            noBtn.style.position = 'fixed'; // Use fixed to ignore containers
+            noBtn.style.left = `${x}px`;
+            noBtn.style.top = `${y}px`;
+        }
+
+        // Logic for the Yes button
         yesBtn.addEventListener('click', () => {
             question.innerHTML = "Yay! I knew you'd say yes! 🥰";
             
-            // Hide the buttons after clicking yes
+            // Hide buttons
             yesBtn.style.display = 'none';
             noBtn.style.display = 'none';
-            
-            // Optional: Change background color or add confetti here
-            document.body.style.backgroundColor = "#ffcccc";
+
+            // Start the hearts animation
+            createHearts();
         });
+
+        function createHearts() {
+            const heartCount = 50; // How many hearts to spawn
+            
+            for (let i = 0; i < heartCount; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '❤️';
+                    heart.classList.add('heart');
+                    
+                    // Random horizontal start position
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    
+                    // Random start from bottom
+                    heart.style.top = '100vh';
+                    
+                    // Randomize animation speed
+                    heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+                    
+                    document.body.appendChild(heart);
+
+                    // Remove heart after animation keeps page clean
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 5000);
+                }, i * 100); // Stagger the hearts slightly
+            }
+        }
     </script>
 </body>
 </html>
